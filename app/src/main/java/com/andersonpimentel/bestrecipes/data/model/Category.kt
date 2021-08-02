@@ -1,4 +1,4 @@
-package com.andersonpimentel.bestrecipes.model
+package com.andersonpimentel.bestrecipes.data.model
 
 data class Category(
     val idCategory: String,
