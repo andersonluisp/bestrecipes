@@ -1,4 +1,4 @@
-package com.andersonpimentel.bestrecipes.ui.main
+package com.andersonpimentel.bestrecipes.ui.main.fragment
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -9,12 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.andersonpimentel.bestrecipes.R
 import com.andersonpimentel.bestrecipes.data.api.GetApiData
 import com.andersonpimentel.bestrecipes.data.repository.Repository
-import com.andersonpimentel.bestrecipes.databinding.MainActivityBinding
 import com.andersonpimentel.bestrecipes.databinding.MainFragmentBinding
-import com.andersonpimentel.bestrecipes.ui.adapter.MealCategoriesAdapter
+import com.andersonpimentel.bestrecipes.ui.main.viewmodel.MainViewModel
+import com.andersonpimentel.bestrecipes.ui.main.adapter.MealCategoriesAdapter
 
 class MainFragment : Fragment() {
 
@@ -37,7 +36,12 @@ class MainFragment : Fragment() {
 
         setupViewModel()
         setupObservers()
+        setupRecyclerView()
 
+
+    }
+
+    private fun setupRecyclerView(){
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvMealsCategories.layoutManager = linearLayoutManager

@@ -1,10 +1,8 @@
-package com.andersonpimentel.bestrecipes.ui.main
+package com.andersonpimentel.bestrecipes.ui.main.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.andersonpimentel.bestrecipes.data.model.Category
 import com.andersonpimentel.bestrecipes.data.model.MealCategories
 import com.andersonpimentel.bestrecipes.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope

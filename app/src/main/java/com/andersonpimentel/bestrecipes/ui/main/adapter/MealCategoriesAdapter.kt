@@ -1,12 +1,12 @@
-package com.andersonpimentel.bestrecipes.ui.adapter
+package com.andersonpimentel.bestrecipes.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.view.menu.MenuView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.andersonpimentel.bestrecipes.data.model.Category
 import com.andersonpimentel.bestrecipes.databinding.ItemCategoriesBinding
-import com.andersonpimentel.bestrecipes.databinding.MainActivityBinding
+import com.andersonpimentel.bestrecipes.ui.main.fragment.MainFragmentDirections
 import com.bumptech.glide.Glide
 
 class MealCategoriesAdapter:RecyclerView.Adapter<MealCategoriesAdapter.MealCategoriesAdapterViewHolder>() {
@@ -22,6 +22,10 @@ class MealCategoriesAdapter:RecyclerView.Adapter<MealCategoriesAdapter.MealCateg
                 Glide.with(binding.root)
                     .load(item.strCategoryThumb)
                     .into(binding.ivMealCategory)
+                binding.cardCategories.setOnClickListener {
+                    val direction = MainFragmentDirections.actionMainFragmentToRecipeFragment(item.strCategory)
+                    binding.root.findNavController().navigate(direction)
+                }
             }
 
         }

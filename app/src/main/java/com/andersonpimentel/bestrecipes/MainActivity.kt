@@ -2,17 +2,20 @@ package com.andersonpimentel.bestrecipes
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.andersonpimentel.bestrecipes.ui.main.MainFragment
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment())
-                .commitNow()
-        }
+
+        setupActionBarWithNavController(findNavController(R.id.nav_host_fragment))
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
