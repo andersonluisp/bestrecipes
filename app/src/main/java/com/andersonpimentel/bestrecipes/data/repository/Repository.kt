@@ -8,4 +8,6 @@ class Repository constructor(private val getApiData: GetApiData) {
 
     suspend fun getRecipesByCategory(category: String) = getApiData.getRecipesByCategory(category)
 
+    suspend fun getRecipe(id: String) = getApiData.getRecipe(id)
+
 }

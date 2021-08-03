@@ -2,6 +2,7 @@ package com.andersonpimentel.bestrecipes.data.api
 
 import com.andersonpimentel.bestrecipes.data.model.MealCategories
 import com.andersonpimentel.bestrecipes.data.model.Meals
+import com.andersonpimentel.bestrecipes.data.model.Recipes
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -16,6 +17,11 @@ interface GetApiData {
     suspend fun getRecipesByCategory(
         @Query("c")category: String
     ): Meals
+
+    @GET("lookup.php")
+    suspend fun getRecipe(
+        @Query("i")id: String
+    ): Recipes
 
     companion object{
 

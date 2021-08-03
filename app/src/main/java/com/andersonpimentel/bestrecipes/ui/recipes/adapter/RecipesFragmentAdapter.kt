@@ -2,9 +2,12 @@ package com.andersonpimentel.bestrecipes.ui.recipes.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.andersonpimentel.bestrecipes.data.model.Meal
 import com.andersonpimentel.bestrecipes.databinding.ItemRecipesBinding
+import com.andersonpimentel.bestrecipes.ui.main.fragment.MainFragmentDirections
+import com.andersonpimentel.bestrecipes.ui.recipes.fragment.RecipesFragmentDirections
 import com.bumptech.glide.Glide
 
 class RecipesFragmentAdapter: RecyclerView.Adapter<RecipesFragmentAdapter.RecipesFragmentAdapterViewHolder>() {
@@ -21,6 +24,11 @@ class RecipesFragmentAdapter: RecyclerView.Adapter<RecipesFragmentAdapter.Recipe
             Glide.with(binding.root)
                 .load(item.strMealThumb)
                 .into(binding.ivRecipe)
+
+            binding.recipeCard.setOnClickListener {
+                val direction = RecipesFragmentDirections.actionNavRecipeFragmentToNavRecipeDetailsFragment(item.idMeal, item.strMeal)
+                binding.root.findNavController().navigate(direction)
+            }
         }
 
     }
