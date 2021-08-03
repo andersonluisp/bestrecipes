@@ -44,8 +44,8 @@ data class Recipe(
     val strMeasure7: String?,
     val strMeasure8: String?,
     val strMeasure9: String?,
-){
-    private fun getListIngredients(): ArrayList<Ingredient>{
+) {
+    private fun getListIngredients(): ArrayList<Ingredient> {
         val ingredients = arrayListOf<Ingredient>()
         ingredients.add(Ingredient(strIngredient1, strMeasure1))
         ingredients.add(Ingredient(strIngredient2, strMeasure2))
@@ -70,12 +70,12 @@ data class Recipe(
         return ingredients
     }
 
-    fun filterBlankIngredient(): ArrayList<Ingredient>{
+    fun filterBlankIngredient(): ArrayList<Ingredient> {
         val filteredIngredientList = arrayListOf<Ingredient>()
 
         val inputIngredientList = getListIngredients()
         inputIngredientList.forEach { ingredient ->
-            if(!ingredient.name.isNullOrBlank())
+            if (!ingredient.name.isNullOrBlank())
                 filteredIngredientList.add(ingredient)
         }
         return filteredIngredientList

@@ -6,19 +6,19 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.andersonpimentel.bestrecipes.data.model.Meal
 import com.andersonpimentel.bestrecipes.databinding.ItemRecipesBinding
-import com.andersonpimentel.bestrecipes.ui.main.fragment.MainFragmentDirections
 import com.andersonpimentel.bestrecipes.ui.recipes.fragment.RecipesFragmentDirections
 import com.bumptech.glide.Glide
 
-class RecipesFragmentAdapter: RecyclerView.Adapter<RecipesFragmentAdapter.RecipesFragmentAdapterViewHolder>() {
+class RecipesFragmentAdapter :
+    RecyclerView.Adapter<RecipesFragmentAdapter.RecipesFragmentAdapterViewHolder>() {
 
     private var mealsList = arrayListOf<Meal>()
 
     class RecipesFragmentAdapterViewHolder(
         private val binding: ItemRecipesBinding
-    ): RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Meal){
+        fun bind(item: Meal) {
             binding.tvRecipeTitle.text = item.strMeal
 
             Glide.with(binding.root)
@@ -26,7 +26,11 @@ class RecipesFragmentAdapter: RecyclerView.Adapter<RecipesFragmentAdapter.Recipe
                 .into(binding.ivRecipe)
 
             binding.recipeCard.setOnClickListener {
-                val direction = RecipesFragmentDirections.actionNavRecipeFragmentToNavRecipeDetailsFragment(item.idMeal, item.strMeal)
+                val direction =
+                    RecipesFragmentDirections.actionNavRecipeFragmentToNavRecipeDetailsFragment(
+                        item.idMeal,
+                        item.strMeal
+                    )
                 binding.root.findNavController().navigate(direction)
             }
         }
@@ -50,7 +54,7 @@ class RecipesFragmentAdapter: RecyclerView.Adapter<RecipesFragmentAdapter.Recipe
         return mealsList.size
     }
 
-    fun setupRecyclerView(list: ArrayList<Meal>){
+    fun setupRecyclerView(list: ArrayList<Meal>) {
         mealsList = list
         notifyDataSetChanged()
     }

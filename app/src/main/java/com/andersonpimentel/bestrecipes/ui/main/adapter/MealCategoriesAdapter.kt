@@ -9,37 +9,42 @@ import com.andersonpimentel.bestrecipes.databinding.ItemCategoriesBinding
 import com.andersonpimentel.bestrecipes.ui.main.fragment.MainFragmentDirections
 import com.bumptech.glide.Glide
 
-class MealCategoriesAdapter:RecyclerView.Adapter<MealCategoriesAdapter.MealCategoriesAdapterViewHolder>() {
+class MealCategoriesAdapter :
+    RecyclerView.Adapter<MealCategoriesAdapter.MealCategoriesAdapterViewHolder>() {
 
     private var listMealCategories = arrayListOf<Category>()
 
     class MealCategoriesAdapterViewHolder(
         private val binding: ItemCategoriesBinding
-        ): RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-            fun bind (item: Category){
-                binding.tvTitleCategory.text = item.strCategory
-                Glide.with(binding.root)
-                    .load(item.strCategoryThumb)
-                    .into(binding.ivMealCategory)
-                binding.cardCategories.setOnClickListener {
-                    val direction = MainFragmentDirections.actionMainFragmentToRecipeFragment(item.strCategory)
-                    binding.root.findNavController().navigate(direction)
-                }
+        fun bind(item: Category) {
+            binding.tvTitleCategory.text = item.strCategory
+            Glide.with(binding.root)
+                .load(item.strCategoryThumb)
+                .into(binding.ivMealCategory)
+            binding.cardCategories.setOnClickListener {
+                val direction =
+                    MainFragmentDirections.actionMainFragmentToRecipeFragment(item.strCategory)
+                binding.root.findNavController().navigate(direction)
             }
-
         }
+
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MealCategoriesAdapter.MealCategoriesAdapterViewHolder {
+    ): MealCategoriesAdapterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCategoriesBinding.inflate(inflater, parent, false)
-        return MealCategoriesAdapter.MealCategoriesAdapterViewHolder(binding)
+        return MealCategoriesAdapterViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: MealCategoriesAdapter.MealCategoriesAdapterViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: MealCategoriesAdapterViewHolder,
+        position: Int
+    ) {
         holder.bind(listMealCategories[position])
     }
 
@@ -47,7 +52,7 @@ class MealCategoriesAdapter:RecyclerView.Adapter<MealCategoriesAdapter.MealCateg
         return listMealCategories.size
     }
 
-    fun setupRecyclerView(list: ArrayList<Category>){
+    fun setupRecyclerView(list: ArrayList<Category>) {
         listMealCategories = list
         notifyDataSetChanged()
     }

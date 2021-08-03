@@ -19,18 +19,13 @@ class MainViewModel constructor(private val repository: Repository) : ViewModel(
         getMealsCategories()
     }
 
-    fun getMealsCategories(){
+    fun getMealsCategories() {
 
         CoroutineScope(IO).launch {
             mealsCategories = repository.getMealsCategories()
             mealsCategoriesLiveData.postValue(mealsCategories)
         }
     }
-
-    // TODO: Implement the ViewModel
-
-
-
 
     class MainViewModelFactory constructor(private val repository: Repository) :
         ViewModelProvider.Factory {

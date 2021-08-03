@@ -1,19 +1,18 @@
 package com.andersonpimentel.bestrecipes.ui.main.fragment
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersonpimentel.bestrecipes.data.api.GetApiData
 import com.andersonpimentel.bestrecipes.data.repository.Repository
 import com.andersonpimentel.bestrecipes.databinding.MainFragmentBinding
-import com.andersonpimentel.bestrecipes.ui.main.viewmodel.MainViewModel
 import com.andersonpimentel.bestrecipes.ui.main.adapter.MealCategoriesAdapter
+import com.andersonpimentel.bestrecipes.ui.main.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
 
@@ -38,28 +37,24 @@ class MainFragment : Fragment() {
         setupObservers()
         setupRecyclerView()
 
-
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         binding.rvMealsCategories.layoutManager = linearLayoutManager
         binding.rvMealsCategories.adapter = adapter
     }
 
-    private fun setupViewModel(){
+    private fun setupViewModel() {
         mainViewModel = ViewModelProvider(
             this,
             MainViewModel.MainViewModelFactory(repository = repository)
         ).get(MainViewModel::class.java)
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         mainViewModel.mealsCategoriesLiveData.observe(viewLifecycleOwner, Observer {
-            it.categories.forEach{ category ->
-                Log.e("Teste", category.strCategory)
-            }
             adapter.setupRecyclerView(it.categories)
         })
     }

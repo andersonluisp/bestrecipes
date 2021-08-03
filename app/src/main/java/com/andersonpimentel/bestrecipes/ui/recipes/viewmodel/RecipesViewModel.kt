@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class RecipesViewModel constructor(
     private val repository: Repository,
     private val args: RecipesFragmentArgs
-    ) : ViewModel() {
+) : ViewModel() {
 
     private lateinit var recipes: Meals
     val recipesLiveData = MutableLiveData<Meals>()
@@ -23,7 +23,7 @@ class RecipesViewModel constructor(
         getRecipesByCategory(args.categoryRecipes)
     }
 
-    fun getRecipesByCategory(category: String){
+    fun getRecipesByCategory(category: String) {
         CoroutineScope(IO).launch {
             recipes = repository.getRecipesByCategory(category)
             recipesLiveData.postValue(recipes)
@@ -33,8 +33,8 @@ class RecipesViewModel constructor(
     class RecipesViewModelFactory constructor(
         private val repository: Repository,
         private val args: RecipesFragmentArgs
-        ) :
-            ViewModelProvider.Factory{
+    ) :
+        ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return RecipesViewModel(this.repository, this.args) as T
         }

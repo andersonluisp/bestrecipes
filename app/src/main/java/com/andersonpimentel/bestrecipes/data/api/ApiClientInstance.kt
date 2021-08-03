@@ -11,7 +11,7 @@ object ApiClientInstance {
     //create a retrofit instance
     val retrofitInstance: Retrofit?
         get() {
-            if(retrofit == null){
+            if (retrofit == null) {
                 retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())

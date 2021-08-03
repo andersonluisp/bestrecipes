@@ -3,8 +3,6 @@ package com.andersonpimentel.bestrecipes.data.api
 import com.andersonpimentel.bestrecipes.data.model.MealCategories
 import com.andersonpimentel.bestrecipes.data.model.Meals
 import com.andersonpimentel.bestrecipes.data.model.Recipes
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,19 +13,19 @@ interface GetApiData {
 
     @GET("filter.php")
     suspend fun getRecipesByCategory(
-        @Query("c")category: String
+        @Query("c") category: String
     ): Meals
 
     @GET("lookup.php")
     suspend fun getRecipe(
-        @Query("i")id: String
+        @Query("i") id: String
     ): Recipes
 
-    companion object{
+    companion object {
 
         var getApiService: GetApiData? = null
 
-        fun getInstance() : GetApiData {
+        fun getInstance(): GetApiData {
 
             if (getApiService == null) {
                 val retrofit = ApiClientInstance.retrofitInstance
