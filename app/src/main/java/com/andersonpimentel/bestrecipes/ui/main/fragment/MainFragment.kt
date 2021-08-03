@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -56,7 +57,15 @@ class MainFragment : Fragment() {
     private fun setupObservers() {
         mainViewModel.mealsCategoriesLiveData.observe(viewLifecycleOwner, Observer {
             adapter.setupRecyclerView(it.categories)
+            binding.pbProgressCircular.visibility = View.GONE
+            binding.rvMealsCategories.visibility = View.VISIBLE
+        })
+
+        mainViewModel.exception.observe(viewLifecycleOwner, Observer {
+            binding.pbProgressCircular.visibility = View.GONE
+            binding.rvMealsCategories.visibility = View.GONE
+            binding.tvErrorApi.text = "Erro ao importar dados \nTente novamente mais tarde"
+            binding.tvErrorApi.visibility = View.VISIBLE
         })
     }
-
 }
