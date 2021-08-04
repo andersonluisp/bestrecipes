@@ -2,12 +2,13 @@ package com.andersonpimentel.bestrecipes.data.repository
 
 import com.andersonpimentel.bestrecipes.data.api.GetApiData
 
-class Repository constructor(private val getApiData: GetApiData) {
+object Repository {
 
-    suspend fun getMealsCategories() = getApiData.getMealsCategories()
+    private val api = GetApiData.instance
 
-    suspend fun getRecipesByCategory(category: String) = getApiData.getRecipesByCategory(category)
+    suspend fun getMealsCategories() = api.getMealsCategories()
 
-    suspend fun getRecipe(id: String) = getApiData.getRecipe(id)
+    suspend fun getRecipesByCategory(category: String) = api.getRecipesByCategory(category)
 
+    suspend fun getRecipe(id: String) = api.getRecipe(id)
 }

@@ -4,68 +4,85 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.andersonpimentel.bestrecipes.data.api.GetApiData
-import com.andersonpimentel.bestrecipes.data.repository.Repository
+import com.andersonpimentel.bestrecipes.app.gone
+import com.andersonpimentel.bestrecipes.app.visible
 import com.andersonpimentel.bestrecipes.databinding.MainFragmentBinding
 import com.andersonpimentel.bestrecipes.ui.main.adapter.MealCategoriesAdapter
 import com.andersonpimentel.bestrecipes.ui.main.viewmodel.MainViewModel
 
 class MainFragment : Fragment() {
-
-    private lateinit var binding: MainFragmentBinding
-    private lateinit var mainViewModel: MainViewModel
-    private var getApiInstance = GetApiData.getInstance()
-    private var repository = Repository(getApiInstance)
-    private val adapter by lazy { MealCategoriesAdapter() }
+    private val vm by viewModels<MainViewModel>()
+    private lateinit var b: MainFragmentBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = MainFragmentBinding.inflate(layoutInflater)
-        return binding.root
+        b = MainFragmentBinding.inflate(inflater)
+        return b.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        setupViewModel()
-        setupObservers()
         setupRecyclerView()
-
+        setupObservers()
     }
 
     private fun setupRecyclerView() {
-        val linearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.rvMealsCategories.layoutManager = linearLayoutManager
-        binding.rvMealsCategories.adapter = adapter
+        b.rvMealsCategories.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                orientation = LinearLayoutManager.VERTICAL
+            }
+            adapter = MealCategoriesAdapter(
+                onItemClick = { item, _ ->
+                    navToRecipeFragment(item.title)
+                }
+            )
+        }
     }
 
-    private fun setupViewModel() {
-        mainViewModel = ViewModelProvider(
-            this,
-            MainViewModel.MainViewModelFactory(repository = repository)
-        ).get(MainViewModel::class.java)
+    private fun navToRecipeFragment(recipeTitle: String) {
+        findNavController().navigate(
+            MainFragmentDirections.actionMainFragmentToRecipeFragment(recipeTitle)
+        )
     }
 
     private fun setupObservers() {
-        mainViewModel.mealsCategoriesLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.setupRecyclerView(it.categories)
-            binding.pbProgressCircular.visibility = View.GONE
-            binding.rvMealsCategories.visibility = View.VISIBLE
-        })
+        vm.mealsCategoriesLiveData.observe(
+            viewLifecycleOwner,
+            {
+                (b.rvMealsCategories.adapter as MealCategoriesAdapter).updateList(it)
+                setListViewState()
+            }
+        )
 
-        mainViewModel.exception.observe(viewLifecycleOwner, Observer {
-            binding.pbProgressCircular.visibility = View.GONE
-            binding.rvMealsCategories.visibility = View.GONE
-            binding.tvErrorApi.text = "Erro ao importar dados \nTente novamente mais tarde"
-            binding.tvErrorApi.visibility = View.VISIBLE
-        })
+        vm.exception.observe(
+            viewLifecycleOwner,
+            {
+                setErrorState(it.message)
+            }
+        )
+    }
+
+    private fun setErrorState(errorMessage: String?) {
+        b.apply {
+            pbProgressCircular.gone()
+            rvMealsCategories.gone()
+            tvErrorApi.apply {
+                text = errorMessage
+                visible()
+            }
+        }
+    }
+
+    private fun setListViewState() {
+        b.pbProgressCircular.gone()
+        b.rvMealsCategories.visible()
     }
 }

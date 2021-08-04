@@ -5,75 +5,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.andersonpimentel.bestrecipes.data.api.GetApiData
+import com.andersonpimentel.bestrecipes.app.load
 import com.andersonpimentel.bestrecipes.data.model.Recipe
-import com.andersonpimentel.bestrecipes.data.repository.Repository
 import com.andersonpimentel.bestrecipes.databinding.RecipeDetailsFragmentBinding
 import com.andersonpimentel.bestrecipes.ui.recipe.adapter.IngredientAdapter
 import com.andersonpimentel.bestrecipes.ui.recipe.viewmodel.RecipeDetailsViewModel
-import com.bumptech.glide.Glide
 
 class RecipeDetails : Fragment() {
 
     private val args: RecipeDetailsArgs by navArgs()
-    private lateinit var binding: RecipeDetailsFragmentBinding
-    private var getApiInstance = GetApiData.getInstance()
-    private var repository = Repository(getApiInstance)
-    private val ingredientAdapter by lazy { IngredientAdapter() }
-    private lateinit var recipeDetailsViewModel: RecipeDetailsViewModel
+    private lateinit var b: RecipeDetailsFragmentBinding
+    private val vm by viewModels<RecipeDetailsViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = RecipeDetailsFragmentBinding.inflate(layoutInflater)
-        return binding.root
+        b = RecipeDetailsFragmentBinding.inflate(layoutInflater)
+        return b.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        setupViewModel()
         setupObservers()
         setupRecyclerView()
+
+        vm.loadRecipe(args.recipeId)
     }
 
     private fun setupRecyclerView() {
-        binding.rvIngredients.adapter = ingredientAdapter
-    }
-
-    private fun setupViewModel() {
-        recipeDetailsViewModel = ViewModelProvider(
-            this,
-            RecipeDetailsViewModel.RecipeDetailsViewModelFactory(
-                repository = repository,
-                args = args
-            )
-        ).get(RecipeDetailsViewModel::class.java)
+        b.rvIngredients.adapter = IngredientAdapter()
     }
 
     private fun setupObservers() {
-        recipeDetailsViewModel.recipeLiveData.observe(viewLifecycleOwner, Observer {
-            val recipe = it.meals[0]
-            setupView(recipe)
-        })
+        vm.recipe.observe(
+            viewLifecycleOwner, {
+                setupView(it.meals[0])
+            }
+        )
 
-        recipeDetailsViewModel.ingredientsLiveData.observe(viewLifecycleOwner, Observer {
-            ingredientAdapter.setupRecyclerView(it)
-        })
+        vm.ingredients.observe(
+            viewLifecycleOwner,
+            {
+                (b.rvIngredients.adapter as IngredientAdapter).setupRecyclerView(it)
+            }
+        )
     }
 
     private fun setupView(recipe: Recipe) {
-        binding.tvRecipeTitle.text = recipe.strMeal
-
-        Glide.with(binding.root)
-            .load(recipe.strMealThumb)
-            .into(binding.ivRecipe)
-
-        binding.tvInstructions.text = recipe.strInstructions
+        recipe.let {
+            b.apply {
+                tvRecipeTitle.text = it.strMeal
+                ivRecipe.load(it.strMealThumb)
+                tvInstructions.text = recipe.strInstructions
+            }
+        }
     }
-
 }

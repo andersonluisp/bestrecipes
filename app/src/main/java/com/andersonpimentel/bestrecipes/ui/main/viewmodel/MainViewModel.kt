@@ -3,27 +3,33 @@ package com.andersonpimentel.bestrecipes.ui.main.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import com.andersonpimentel.bestrecipes.app.ImportDataException
 import com.andersonpimentel.bestrecipes.data.model.MealCategories
 import com.andersonpimentel.bestrecipes.data.repository.Repository
+import com.andersonpimentel.bestrecipes.ui.recipe.viewmodel.Category
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class MainViewModel constructor(private val repository: Repository) : ViewModel() {
-
+class MainViewModel : ViewModel() {
     private lateinit var mealsCategories: MealCategories
     private val _mealsCategoriesLiveData = MutableLiveData<MealCategories>()
-    private val _exception = MutableLiveData<Exception>()
 
-    val mealsCategoriesLiveData: LiveData<MealCategories>
-        get() = _mealsCategoriesLiveData
+    val mealsCategoriesLiveData = Transformations.map(_mealsCategoriesLiveData) {
+        it.categories.mapTo(arrayListOf()) { data ->
+            Category(
+                id = data.idCategory,
+                title = data.strCategory,
+                description = data.strCategoryDescription,
+                thumbUrl = data.strCategoryThumb
+            )
+        }
+    }
 
-    val exception: LiveData<Exception>
-        get() = _exception
-
+    val exception = MutableLiveData<Exception>()
 
     init {
         _mealsCategoriesLiveData
@@ -33,25 +39,11 @@ class MainViewModel constructor(private val repository: Repository) : ViewModel(
     private fun getMealsCategories() {
         CoroutineScope(IO).launch {
             try {
-                mealsCategories = repository.getMealsCategories()
-                _mealsCategoriesLiveData.postValue(mealsCategories)
-            } catch (e: Exception){
+                _mealsCategoriesLiveData.postValue(Repository.getMealsCategories())
+            } catch (e: Exception) {
                 Log.e("Error", e.message.toString())
-                _exception.postValue(e)
+                exception.postValue(ImportDataException())
             }
         }
-    }
-
-    class MainViewModelFactory constructor(private val repository: Repository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-                MainViewModel(this.repository) as T
-            } else {
-                throw IllegalAccessException("ViewModel Not Found")
-            }
-        }
-
     }
 }
-

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Best Recipes</string>
+    <string name="import_data_error_message">Erro ao importar dados. Tente novamente mais tarde.</string>
 </resources>
