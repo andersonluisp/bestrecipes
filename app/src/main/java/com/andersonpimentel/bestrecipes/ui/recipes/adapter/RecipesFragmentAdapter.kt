@@ -34,7 +34,6 @@ class RecipesFragmentAdapter :
                 binding.root.findNavController().navigate(direction)
             }
         }
-
     }
 
     override fun onCreateViewHolder(
@@ -58,6 +57,4 @@ class RecipesFragmentAdapter :
         mealsList = list
         notifyDataSetChanged()
     }
-
-
 }

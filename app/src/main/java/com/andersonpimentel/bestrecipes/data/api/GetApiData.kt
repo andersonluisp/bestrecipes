@@ -22,17 +22,6 @@ interface GetApiData {
     ): Recipes
 
     companion object {
-
-        var getApiService: GetApiData? = null
-
-        fun getInstance(): GetApiData {
-
-            if (getApiService == null) {
-                val retrofit = ApiClientInstance.retrofitInstance
-                getApiService = retrofit?.create(GetApiData::class.java)
-            }
-            return getApiService!!
-        }
+        val instance = ApiClientInstance.retrofit?.create(GetApiData::class.java)!!
     }
-
 }
